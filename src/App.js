@@ -1,25 +1,29 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Suspense, useEffect } from "react";
+import { BrowserRouter, Switch, Redirect } from "react-router-dom";
+import Loading from "./Components/Loading"
+import Home from "./Pages/Home"
+import ContentRoute from "./Components/ContentRoute"
+import  setGlobalConfig from './hooks/useGlobalConfig';
 
-function App() {
+function BasePage() {
+  useEffect(() => {
+    setGlobalConfig();
+  }, [])
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Suspense fallback={<Loading />}>
+      <BrowserRouter>
+
+        <Switch>
+          {<Redirect exact from="/" to="/home" />}
+          <ContentRoute path="/home" component={Home} />
+
+
+        </Switch>
+      </BrowserRouter>
+
+    </Suspense>
   );
 }
 
-export default App;
+export default BasePage;
